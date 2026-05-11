@@ -139,3 +139,78 @@ The clauses always go in this order:
 - [ ] I know the order clauses must appear in
 
 Lesson 5 is just review 
+
+
+######################################################################################################################################################################################################################################
+
+
+## SQLBolt Lesson 6: INNER JOIN
+
+### Why we need JOINs
+- Real databases split data across multiple tables (normalization)
+- Reduces duplicate data; lets each table grow independently
+- Trade-off: queries get more complex, can be slower on big tables
+- To answer questions that span tables, we need to combine them
+
+### How tables connect
+- Each table has a **primary key** — a column that uniquely identifies each row
+- Often an auto-incrementing integer, but can be a string or hash
+- Two tables "share information about an entity" by referencing the same key
+
+### INNER JOIN syntax
+
+    SELECT columns
+    FROM table_a
+    INNER JOIN table_b
+        ON table_a.id = table_b.id
+    WHERE ...
+    ORDER BY ...
+    LIMIT ...;
+
+### What INNER JOIN does (in plain words)
+- Looks at every row in table A and every row in table B
+- Wherever the `ON` condition matches, it combines them into one wider row
+- Rows that don't match in BOTH tables get dropped
+- Result: only rows that exist in both tables
+
+### Things to remember
+- `JOIN` and `INNER JOIN` are the same thing — stick with `INNER JOIN` for clarity
+- The `ON` clause is what tells SQL *how* to match the rows
+- Always qualify column names when they exist in both tables: `movies.id` not just `id`
+- `WHERE`, `ORDER BY`, `LIMIT` all still work the same — applied *after* the join
+
+
+######################################################################################################################################################################################################################################
+
+
+##  Lesson 7: OUTER JOINs
+
+### Why we need them
+- INNER JOIN only returns rows that have a match in BOTH tables
+- If data is "asymmetric" (one table has rows the other doesn't), INNER JOIN drops them
+- OUTER JOINs let us keep the unmatched rows instead
+
+### The three OUTER JOINs
+
+| Join type  | Keeps rows from         | Drops rows from                  |
+|------------|-------------------------|----------------------------------|
+| LEFT JOIN  | Left table (always)     | Unmatched rows from right        |
+| RIGHT JOIN | Right table (always)    | Unmatched rows from left         |
+| FULL JOIN  | Both tables (always)    | Nothing                          |
+
+- "Left" = the table named first (after FROM)
+- "Right" = the table named second (after JOIN)
+- Unmatched rows get NULL in the columns from the other table
+
+### Syntax (same as INNER JOIN, just swap the keyword)
+
+    SELECT columns
+    FROM table_a
+    LEFT JOIN table_b
+        ON table_a.id = table_b.a_id;
+
+### Gotchas
+- LEFT OUTER JOIN == LEFT JOIN (the "OUTER" is optional, kept from SQL-92)
+- Same for RIGHT and FULL
+- You'll get NULLs in results — need to handle them with WHERE or IS NULL (Lesson 8)
+- SQLBolt's browser only supports LEFT JOIN in exercises, but the concepts apply to all three
